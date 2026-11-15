@@ -1,3 +1,4 @@
+
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -6,6 +7,7 @@ public final class SharkWarps extends JavaPlugin {
 
     private WarpManager warpManager;
     private TeleportManager teleportManager;
+    private MenuManager menuManager;
 
     @Override
     public void onEnable() {
@@ -13,8 +15,8 @@ public final class SharkWarps extends JavaPlugin {
         getLogger().info("Iniciando SharkWarps...");
 
         warpManager = new WarpManager(this);
-
         teleportManager = new TeleportManager(this);
+        menuManager = new MenuManager(this);
 
         if (getCommand("pw") != null) {
             getCommand("pw").setExecutor(new PwCommand(this));
@@ -37,5 +39,8 @@ public final class SharkWarps extends JavaPlugin {
     public TeleportManager getTeleportManager() {
         return teleportManager;
     }
-}
 
+    public MenuManager getMenuManager() {
+        return menuManager;
+    }
+}
