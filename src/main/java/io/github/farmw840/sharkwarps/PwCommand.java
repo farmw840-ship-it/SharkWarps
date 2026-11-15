@@ -33,15 +33,8 @@ public class PwCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            player.sendMessage(ChatColor.DARK_AQUA + "§m--------------------------");
-            player.sendMessage(ChatColor.AQUA + "       SHARK WARPS");
-            player.sendMessage(ChatColor.GRAY + "/pw cria <nome>");
-            player.sendMessage(ChatColor.GRAY + "/pw remove <nome>");
-            player.sendMessage(ChatColor.GRAY + "/pw edita <nome>");
-            player.sendMessage(ChatColor.GRAY + "/pw visita <nome>");
-            player.sendMessage(ChatColor.GRAY + "/pw lista");
-            player.sendMessage(ChatColor.DARK_AQUA + "§m--------------------------");
-            return true;
+    plugin.getMenuManager().open(player);
+    return true;
         }
 
         switch (args[0].toLowerCase()) {
