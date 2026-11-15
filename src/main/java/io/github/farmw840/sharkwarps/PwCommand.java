@@ -1,3 +1,4 @@
+
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.Bukkit;
@@ -32,9 +33,10 @@ public class PwCommand implements CommandExecutor {
             return true;
         }
 
+        // /pw abre o menu
         if (args.length == 0) {
-    plugin.getMenuManager().open(player);
-    return true;
+            plugin.getMenuManager().open(player);
+            return true;
         }
 
         switch (args[0].toLowerCase()) {
@@ -93,7 +95,6 @@ public class PwCommand implements CommandExecutor {
                 }
 
                 plugin.getWarpManager().removeWarp(name);
-
                 player.sendMessage(ChatColor.GREEN +
                         "A PWARP " + name + " foi removida!");
             }
@@ -123,9 +124,7 @@ public class PwCommand implements CommandExecutor {
                 }
 
                 plugin.getTeleportManager().teleport(
-                        player,
-                        destination,
-                        name
+                        player, destination, name
                 );
             }
 
@@ -147,11 +146,9 @@ public class PwCommand implements CommandExecutor {
                 player.sendMessage("§8§m--------------------------------");
                 player.sendMessage("§b§l       SHARK WARPS");
                 player.sendMessage("§7Total de lojas: §f" + warps.size());
-                player.sendMessage(" ");
 
                 for (String warp : warps) {
-                    UUID owner =
-                            plugin.getWarpManager().getOwner(warp);
+                    UUID owner = plugin.getWarpManager().getOwner(warp);
 
                     String ownerName = "Desconhecido";
 
@@ -164,16 +161,12 @@ public class PwCommand implements CommandExecutor {
                         }
                     }
 
-                    int visits =
-                            plugin.getWarpManager().getVisits(warp);
+                    int visits = plugin.getWarpManager().getVisits(warp);
 
                     player.sendMessage("§b◆ §f" + warp);
                     player.sendMessage("  §7Dono: §f" + ownerName);
                     player.sendMessage("  §7Visitas: §e" + visits);
-                    player.sendMessage(" ");
                 }
-
-                player.sendMessage("§8§m--------------------------------");
             }
 
             default -> player.sendMessage(ChatColor.RED +
@@ -183,4 +176,3 @@ public class PwCommand implements CommandExecutor {
         return true;
     }
 }
-
