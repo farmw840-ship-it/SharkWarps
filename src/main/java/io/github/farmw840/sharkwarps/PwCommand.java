@@ -70,8 +70,40 @@ public class PwCommand implements CommandExecutor {
             }
 
             case "remove" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de remoção em desenvolvimento.");
+
+    if (args.length < 2) {
+        player.sendMessage(ChatColor.RED +
+                "Use: /pw remove <nome>");
+        return true;
+    }
+
+    String name = args[1].toLowerCase();
+
+    if (!plugin.getWarpManager().getWarpNames().contains(name)) {
+        player.sendMessage(ChatColor.RED +
+                "Essa PWARP não existe!");
+        return true;
+    }
+
+    java.util.UUID owner =
+            plugin.getWarpManager().getOwner(name);
+
+    boolean isOwner = owner != null &&
+            owner.equals(player.getUniqueId());
+
+    boolean isAdmin =
+            player.hasPermission("sharkwarps.admin");
+
+    if (!isOwner && !isAdmin) {
+        player.sendMessage(ChatColor.RED +
+                "Você não pode remover a PWARP de outro jogador!");
+        return true;
+    }
+
+    plugin.getWarpManager().removeWarp(name);
+
+    player.sendMessage(ChatColor.GREEN +
+            "A PWARP " + name + " foi removida!");
             }
 
             case "edita" -> {
