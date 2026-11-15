@@ -1,7 +1,7 @@
-
 name: SharkWarps
 version: 1.0.0
 main: io.github.farmw840.sharkwarps.SharkWarps
+api-version: '26.3'
 description: Sistema profissional de Player Warps
 author: farmw840-ship-it
 
