@@ -1,4 +1,3 @@
-
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.ChatColor;
@@ -24,72 +23,77 @@ public class PwCommand implements CommandExecutor {
     ) {
 
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Este comando só pode ser usado no jogo.");
+            sender.sendMessage("Use este comando dentro do Minecraft.");
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage(ChatColor.DARK_AQUA + "§m------------------------");
+            player.sendMessage(ChatColor.DARK_AQUA + "§m--------------------------");
             player.sendMessage(ChatColor.AQUA + "       SHARK WARPS");
             player.sendMessage(ChatColor.GRAY + "/pw cria <nome>");
             player.sendMessage(ChatColor.GRAY + "/pw remove <nome>");
             player.sendMessage(ChatColor.GRAY + "/pw edita <nome>");
             player.sendMessage(ChatColor.GRAY + "/pw visita <nome>");
             player.sendMessage(ChatColor.GRAY + "/pw lista");
-            player.sendMessage(ChatColor.GRAY + "/pw minhas");
-            player.sendMessage(ChatColor.GRAY + "/pw favoritas");
-            player.sendMessage(ChatColor.GRAY + "/pw visitadas");
-            player.sendMessage(ChatColor.DARK_AQUA + "§m------------------------");
+            player.sendMessage(ChatColor.DARK_AQUA + "§m--------------------------");
             return true;
         }
 
         switch (args[0].toLowerCase()) {
 
             case "cria" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de criação de PWARP em desenvolvimento!");
+
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED +
+                            "Use: /pw cria <nome>");
+                    return true;
+                }
+
+                String name = args[1].toLowerCase();
+
+                if (!name.matches("[a-z0-9_-]{3,16}")) {
+                    player.sendMessage(ChatColor.RED +
+                            "O nome deve ter de 3 a 16 caracteres.");
+                    return true;
+                }
+
+                boolean created =
+                        plugin.getWarpManager().createWarp(player, name);
+
+                if (created) {
+                    player.sendMessage(ChatColor.GREEN +
+                            "Sua PWARP " + name + " foi criada!");
+                } else {
+                    player.sendMessage(ChatColor.RED +
+                            "Já existe uma PWARP com esse nome!");
+                }
             }
 
             case "remove" -> {
                 player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de remoção em desenvolvimento!");
+                        "Sistema de remoção em desenvolvimento.");
             }
 
             case "edita" -> {
                 player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de edição em desenvolvimento!");
+                        "Sistema de edição em desenvolvimento.");
             }
 
             case "visita" -> {
                 player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de visitas em desenvolvimento!");
+                        "Sistema de visitas em desenvolvimento.");
             }
 
             case "lista" -> {
                 player.sendMessage(ChatColor.YELLOW +
-                        "Lista de PWARPS em desenvolvimento!");
+                        "Sistema de listagem em desenvolvimento.");
             }
 
-            case "minhas" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Suas PWARPS aparecerão aqui!");
-            }
-
-            case "favoritas" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Suas PWARPS favoritas aparecerão aqui!");
-            }
-
-            case "visitadas" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Seu histórico aparecerá aqui!");
-            }
-
-            default -> player.sendMessage(
-                    ChatColor.RED + "Comando desconhecido. Use /pw"
-            );
+            default -> player.sendMessage(ChatColor.RED +
+                    "Comando desconhecido. Use /pw");
         }
 
         return true;
     }
 }
+
