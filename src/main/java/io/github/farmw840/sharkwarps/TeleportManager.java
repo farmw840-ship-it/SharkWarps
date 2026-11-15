@@ -1,4 +1,3 @@
-
 package io.github.farmw840.sharkwarps;
 
 import net.kyori.adventure.text.Component;
@@ -58,6 +57,7 @@ public class TeleportManager implements Listener {
 
                     if (success) {
                         plugin.getWarpManager().incrementVisits(warpName);
+                        plugin.getWarpManager().addVisited(uuid, warpName);
                         player.sendMessage("§aTeleporte concluído!");
                     } else {
                         player.sendMessage("§cNão foi possível teleportar.");
@@ -130,3 +130,4 @@ public class TeleportManager implements Listener {
         }
     }
 }
+
