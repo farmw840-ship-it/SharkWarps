@@ -1,4 +1,3 @@
-
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,3 +43,4 @@ public final class SharkWarps extends JavaPlugin {
         return menuManager;
     }
 }
+
