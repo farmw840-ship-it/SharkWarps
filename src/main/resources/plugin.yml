@@ -1,0 +1,23 @@
+
+name: SharkWarps
+version: 1.0.0
+main: io.github.farmw840.sharkwarps.SharkWarps
+description: Sistema profissional de Player Warps
+author: farmw840-ship-it
+
+commands:
+  pw:
+    description: Sistema de Player Warps
+    usage: /pw
+    aliases:
+      - pwarp
+      - pwarps
+
+permissions:
+  sharkwarps.use:
+    description: Permite utilizar o sistema de PWARPS
+    default: true
+
+  sharkwarps.admin:
+    description: Permite administrar o SharkWarps
+    default: op
