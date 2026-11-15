@@ -1,6 +1,6 @@
-
 package io.github.farmw840.sharkwarps;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PwCommand implements CommandExecutor {
@@ -46,10 +47,8 @@ public class PwCommand implements CommandExecutor {
         switch (args[0].toLowerCase()) {
 
             case "cria" -> {
-
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED +
-                            "Use: /pw cria <nome>");
+                    player.sendMessage(ChatColor.RED + "Use: /pw cria <nome>");
                     return true;
                 }
 
@@ -74,23 +73,19 @@ public class PwCommand implements CommandExecutor {
             }
 
             case "remove" -> {
-
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED +
-                            "Use: /pw remove <nome>");
+                    player.sendMessage(ChatColor.RED + "Use: /pw remove <nome>");
                     return true;
                 }
 
                 String name = args[1].toLowerCase();
 
                 if (!plugin.getWarpManager().getWarpNames().contains(name)) {
-                    player.sendMessage(ChatColor.RED +
-                            "Essa PWARP não existe!");
+                    player.sendMessage(ChatColor.RED + "Essa PWARP não existe!");
                     return true;
                 }
 
-                UUID owner =
-                        plugin.getWarpManager().getOwner(name);
+                UUID owner = plugin.getWarpManager().getOwner(name);
 
                 boolean isOwner = owner != null &&
                         owner.equals(player.getUniqueId());
@@ -104,23 +99,15 @@ public class PwCommand implements CommandExecutor {
                     return true;
                 }
 
-                boolean removed =
-                        plugin.getWarpManager().removeWarp(name);
+                plugin.getWarpManager().removeWarp(name);
 
-                if (removed) {
-                    player.sendMessage(ChatColor.GREEN +
-                            "A PWARP " + name + " foi removida!");
-                } else {
-                    player.sendMessage(ChatColor.RED +
-                            "Não foi possível remover essa PWARP!");
-                }
+                player.sendMessage(ChatColor.GREEN +
+                        "A PWARP " + name + " foi removida!");
             }
 
             case "visita" -> {
-
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED +
-                            "Use: /pw visita <nome>");
+                    player.sendMessage(ChatColor.RED + "Use: /pw visita <nome>");
                     return true;
                 }
 
@@ -155,8 +142,45 @@ public class PwCommand implements CommandExecutor {
             }
 
             case "lista" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de listagem em desenvolvimento.");
+                List<String> warps =
+                        plugin.getWarpManager().getWarpNames();
+
+                if (warps.isEmpty()) {
+                    player.sendMessage(ChatColor.YELLOW +
+                            "Ainda não existem PWARPS cadastradas!");
+                    return true;
+                }
+
+                player.sendMessage("§8§m--------------------------------");
+                player.sendMessage("§b§l       SHARK WARPS");
+                player.sendMessage("§7Total de lojas: §f" + warps.size());
+                player.sendMessage(" ");
+
+                for (String warp : warps) {
+                    UUID owner =
+                            plugin.getWarpManager().getOwner(warp);
+
+                    String ownerName = "Desconhecido";
+
+                    if (owner != null) {
+                        String foundName =
+                                Bukkit.getOfflinePlayer(owner).getName();
+
+                        if (foundName != null) {
+                            ownerName = foundName;
+                        }
+                    }
+
+                    int visits =
+                            plugin.getWarpManager().getVisits(warp);
+
+                    player.sendMessage("§b◆ §f" + warp);
+                    player.sendMessage("  §7Dono: §f" + ownerName);
+                    player.sendMessage("  §7Visitas: §e" + visits);
+                    player.sendMessage(" ");
+                }
+
+                player.sendMessage("§8§m--------------------------------");
             }
 
             default -> player.sendMessage(ChatColor.RED +
@@ -166,3 +190,4 @@ public class PwCommand implements CommandExecutor {
         return true;
     }
 }
+
