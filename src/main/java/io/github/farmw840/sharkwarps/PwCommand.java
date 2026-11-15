@@ -1,3 +1,4 @@
+
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.ChatColor;
@@ -5,6 +6,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class PwCommand implements CommandExecutor {
 
@@ -71,39 +74,39 @@ public class PwCommand implements CommandExecutor {
 
             case "remove" -> {
 
-    if (args.length < 2) {
-        player.sendMessage(ChatColor.RED +
-                "Use: /pw remove <nome>");
-        return true;
-    }
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED +
+                            "Use: /pw remove <nome>");
+                    return true;
+                }
 
-    String name = args[1].toLowerCase();
+                String name = args[1].toLowerCase();
 
-    if (!plugin.getWarpManager().getWarpNames().contains(name)) {
-        player.sendMessage(ChatColor.RED +
-                "Essa PWARP não existe!");
-        return true;
-    }
+                if (!plugin.getWarpManager().getWarpNames().contains(name)) {
+                    player.sendMessage(ChatColor.RED +
+                            "Essa PWARP não existe!");
+                    return true;
+                }
 
-    java.util.UUID owner =
-            plugin.getWarpManager().getOwner(name);
+                UUID owner =
+                        plugin.getWarpManager().getOwner(name);
 
-    boolean isOwner = owner != null &&
-            owner.equals(player.getUniqueId());
+                boolean isOwner = owner != null &&
+                        owner.equals(player.getUniqueId());
 
-    boolean isAdmin =
-            player.hasPermission("sharkwarps.admin");
+                boolean isAdmin =
+                        player.hasPermission("sharkwarps.admin");
 
-    if (!isOwner && !isAdmin) {
-        player.sendMessage(ChatColor.RED +
-                "Você não pode remover a PWARP de outro jogador!");
-        return true;
-    }
+                if (!isOwner && !isAdmin) {
+                    player.sendMessage(ChatColor.RED +
+                            "Você não pode remover a PWARP de outro jogador!");
+                    return true;
+                }
 
-    plugin.getWarpManager().removeWarp(name);
+                plugin.getWarpManager().removeWarp(name);
 
-    player.sendMessage(ChatColor.GREEN +
-            "A PWARP " + name + " foi removida!");
+                player.sendMessage(ChatColor.GREEN +
+                        "A PWARP " + name + " foi removida!");
             }
 
             case "edita" -> {
@@ -118,7 +121,7 @@ public class PwCommand implements CommandExecutor {
 
             case "lista" -> {
                 player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de listagem em desenvolvimento.");
+                        "Sistema de listagem em desenvolvimento!");
             }
 
             default -> player.sendMessage(ChatColor.RED +
@@ -128,4 +131,3 @@ public class PwCommand implements CommandExecutor {
         return true;
     }
 }
-
