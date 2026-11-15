@@ -104,10 +104,16 @@ public class PwCommand implements CommandExecutor {
                     return true;
                 }
 
-                plugin.getWarpManager().removeWarp(name);
+                boolean removed =
+                        plugin.getWarpManager().removeWarp(name);
 
-                player.sendMessage(ChatColor.GREEN +
-                        "A PWARP " + name + " foi removida!");
+                if (removed) {
+                    player.sendMessage(ChatColor.GREEN +
+                            "A PWARP " + name + " foi removida!");
+                } else {
+                    player.sendMessage(ChatColor.RED +
+                            "Não foi possível remover essa PWARP!");
+                }
             }
 
             case "visita" -> {
@@ -138,7 +144,8 @@ public class PwCommand implements CommandExecutor {
 
                 plugin.getTeleportManager().teleport(
                         player,
-                        destination
+                        destination,
+                        name
                 );
             }
 
