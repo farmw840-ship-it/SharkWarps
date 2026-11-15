@@ -1,4 +1,3 @@
-
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.Bukkit;
@@ -22,25 +21,19 @@ public class WarpManager {
 
     public WarpManager(SharkWarps plugin) {
         this.plugin = plugin;
-
         if (!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdirs();
         }
-
         this.file = new File(plugin.getDataFolder(), "warps.yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 
     public boolean createWarp(Player player, String name) {
-
         String path = "warps." + name.toLowerCase();
-
         if (config.contains(path)) {
             return false;
         }
-
         Location loc = player.getLocation();
-
         config.set(path + ".owner", player.getUniqueId().toString());
         config.set(path + ".world", loc.getWorld().getName());
         config.set(path + ".x", loc.getX());
@@ -49,43 +42,29 @@ public class WarpManager {
         config.set(path + ".yaw", loc.getYaw());
         config.set(path + ".pitch", loc.getPitch());
         config.set(path + ".visits", 0);
-
         save();
         return true;
     }
 
     public boolean removeWarp(String name) {
-
         String path = "warps." + name.toLowerCase();
-
         if (!config.contains(path)) {
             return false;
         }
-
         config.set(path, null);
         save();
         return true;
     }
 
     public Location getWarp(String name) {
-
         String path = "warps." + name.toLowerCase();
-
         if (!config.contains(path)) {
             return null;
         }
-
         String worldName = config.getString(path + ".world");
-
-        if (worldName == null) {
-            return null;
-        }
-
+        if (worldName == null) return null;
         World world = Bukkit.getWorld(worldName);
-
-        if (world == null) {
-            return null;
-        }
+        if (world == null) return null;
 
         return new Location(
                 world,
@@ -98,27 +77,27 @@ public class WarpManager {
     }
 
     public List<String> getWarpNames() {
-
-        ConfigurationSection section =
-                config.getConfigurationSection("warps");
-
+        ConfigurationSection section = config.getConfigurationSection("warps");
         if (section == null) {
             return new ArrayList<>();
         }
-
         return new ArrayList<>(section.getKeys(false));
     }
 
-    public UUID getOwner(String name) {
-
-        String owner = config.getString(
-                "warps." + name.toLowerCase() + ".owner"
-        );
-
-        if (owner == null) {
-            return null;
+    public List<String> getPlayerWarps(UUID playerUuid) {
+        List<String> result = new ArrayList<>();
+        for (String name : getWarpNames()) {
+            UUID owner = getOwner(name);
+            if (owner != null && owner.equals(playerUuid)) {
+                result.add(name);
+            }
         }
+        return result;
+    }
 
+    public UUID getOwner(String name) {
+        String owner = config.getString("warps." + name.toLowerCase() + ".owner");
+        if (owner == null) return null;
         try {
             return UUID.fromString(owner);
         } catch (IllegalArgumentException exception) {
@@ -127,34 +106,77 @@ public class WarpManager {
     }
 
     public void incrementVisits(String name) {
-
         String path = "warps." + name.toLowerCase();
-
-        if (!config.contains(path)) {
-            return;
-        }
-
+        if (!config.contains(path)) return;
         int visits = config.getInt(path + ".visits", 0);
-
         config.set(path + ".visits", visits + 1);
-
         save();
     }
 
     public int getVisits(String name) {
+        return config.getInt("warps." + name.toLowerCase() + ".visits", 0);
+    }
 
-        String path = "warps." + name.toLowerCase();
+    public void addVisited(UUID playerUuid, String warpName) {
+        String path = "players." + playerUuid + ".visited";
+        List<String> list = config.getStringList(path);
+        String lower = warpName.toLowerCase();
+        if (!list.contains(lower)) {
+            list.add(lower);
+            config.set(path, list);
+            save();
+        }
+    }
 
-        return config.getInt(path + ".visits", 0);
+    public List<String> getVisited(UUID playerUuid) {
+        List<String> raw = config.getStringList("players." + playerUuid + ".visited");
+        List<String> valid = new ArrayList<>();
+        for (String name : raw) {
+            if (config.contains("warps." + name)) {
+                valid.add(name);
+            }
+        }
+        return valid;
+    }
+
+    public boolean toggleFavorite(UUID playerUuid, String warpName) {
+        String path = "players." + playerUuid + ".favorites";
+        List<String> list = config.getStringList(path);
+        String lower = warpName.toLowerCase();
+        boolean added;
+        if (list.contains(lower)) {
+            list.remove(lower);
+            added = false;
+        } else {
+            list.add(lower);
+            added = true;
+        }
+        config.set(path, list);
+        save();
+        return added;
+    }
+
+    public boolean isFavorite(UUID playerUuid, String warpName) {
+        List<String> list = config.getStringList("players." + playerUuid + ".favorites");
+        return list.contains(warpName.toLowerCase());
+    }
+
+    public List<String> getFavorites(UUID playerUuid) {
+        List<String> raw = config.getStringList("players." + playerUuid + ".favorites");
+        List<String> valid = new ArrayList<>();
+        for (String name : raw) {
+            if (config.contains("warps." + name)) {
+                valid.add(name);
+            }
+        }
+        return valid;
     }
 
     private void save() {
         try {
             config.save(file);
         } catch (IOException exception) {
-            plugin.getLogger().severe(
-                    "Não foi possível salvar as PWARPS!"
-            );
+            plugin.getLogger().severe("Não foi possível salvar as PWARPS!");
             exception.printStackTrace();
         }
     }
