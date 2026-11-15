@@ -48,6 +48,7 @@ public class WarpManager {
         config.set(path + ".z", loc.getZ());
         config.set(path + ".yaw", loc.getYaw());
         config.set(path + ".pitch", loc.getPitch());
+        config.set(path + ".visits", 0);
 
         save();
         return true;
@@ -75,6 +76,11 @@ public class WarpManager {
         }
 
         String worldName = config.getString(path + ".world");
+
+        if (worldName == null) {
+            return null;
+        }
+
         World world = Bukkit.getWorld(worldName);
 
         if (world == null) {
@@ -118,6 +124,28 @@ public class WarpManager {
         } catch (IllegalArgumentException exception) {
             return null;
         }
+    }
+
+    public void incrementVisits(String name) {
+
+        String path = "warps." + name.toLowerCase();
+
+        if (!config.contains(path)) {
+            return;
+        }
+
+        int visits = config.getInt(path + ".visits", 0);
+
+        config.set(path + ".visits", visits + 1);
+
+        save();
+    }
+
+    public int getVisits(String name) {
+
+        String path = "warps." + name.toLowerCase();
+
+        return config.getInt(path + ".visits", 0);
     }
 
     private void save() {
