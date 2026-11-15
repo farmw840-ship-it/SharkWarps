@@ -2,6 +2,7 @@
 package io.github.farmw840.sharkwarps;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -109,19 +110,46 @@ public class PwCommand implements CommandExecutor {
                         "A PWARP " + name + " foi removida!");
             }
 
+            case "visita" -> {
+
+                if (args.length < 2) {
+                    player.sendMessage(ChatColor.RED +
+                            "Use: /pw visita <nome>");
+                    return true;
+                }
+
+                String name = args[1].toLowerCase();
+
+                Location destination =
+                        plugin.getWarpManager().getWarp(name);
+
+                if (destination == null) {
+                    player.sendMessage(ChatColor.RED +
+                            "Essa PWARP não existe ou o mundo não está carregado!");
+                    return true;
+                }
+
+                if (destination.getWorld().equals(player.getWorld())
+                        && destination.distanceSquared(player.getLocation()) < 1) {
+                    player.sendMessage(ChatColor.YELLOW +
+                            "Você já está nesse local!");
+                    return true;
+                }
+
+                plugin.getTeleportManager().teleport(
+                        player,
+                        destination
+                );
+            }
+
             case "edita" -> {
                 player.sendMessage(ChatColor.YELLOW +
                         "Sistema de edição em desenvolvimento.");
             }
 
-            case "visita" -> {
-                player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de visitas em desenvolvimento.");
-            }
-
             case "lista" -> {
                 player.sendMessage(ChatColor.YELLOW +
-                        "Sistema de listagem em desenvolvimento!");
+                        "Sistema de listagem em desenvolvimento.");
             }
 
             default -> player.sendMessage(ChatColor.RED +
