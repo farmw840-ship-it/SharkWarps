@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class SharkWarps extends JavaPlugin {
 
     private WarpManager warpManager;
+    private TeleportManager teleportManager;
 
     @Override
     public void onEnable() {
@@ -12,6 +13,8 @@ public final class SharkWarps extends JavaPlugin {
         getLogger().info("Iniciando SharkWarps...");
 
         warpManager = new WarpManager(this);
+
+        teleportManager = new TeleportManager(this);
 
         if (getCommand("pw") != null) {
             getCommand("pw").setExecutor(new PwCommand(this));
@@ -30,4 +33,9 @@ public final class SharkWarps extends JavaPlugin {
     public WarpManager getWarpManager() {
         return warpManager;
     }
+
+    public TeleportManager getTeleportManager() {
+        return teleportManager;
+    }
 }
+
